@@ -133,7 +133,7 @@
                 var bytes = encoder.encode(text);
                 var uri = "";
                 var ihtml = "";
-                if(bytes.length == 1 && !event.altKey && !event.shiftKey){
+                if(bytes.length == 1 && !event.altKey){
                     if(ascii.indexOf(bytes[0]) > -1){
                         event.preventDefault();
                         ihtml = text;
@@ -169,7 +169,7 @@
                                 break;
                         }
                     } else {
-                        if(event.shiftKey){
+                        if(event.ctrlKey){
                             switch(text){
                                 case " ":
                                     event.preventDefault();
@@ -251,7 +251,7 @@
                 <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&rarr;</kbd></td>
                 <td class="cell">Navigate right</td>
                 <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Shift</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
+                    <kbd class="keyboard-key nowrap">Cntrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
                 </td>
                 <td class="cell">Pause / Play</td>
             </tr>
