@@ -1,21 +1,21 @@
 # [roku.nanick.org](https://roku.nanick.org)
 A webpage that leverages Roku's External Control Protocol to send keyboard input to your Roku which allows for easier typing and faster navigation within the Roku UI.  
-
+**Quick Start**
 ---
-My Roku's URL is hard coded in the JavaScript. If you want to use this, then you'll need to replace  
-```js
-var baseuri = "https://rokustick4k.nanicklocal.hopto.org"
-```
-with either a URL that your Roku can be reached at or your Roku's IP address. I also had to use an nginx proxy_pass in order to get this to work with a hostname.  
+Once you navigate to [roku.nanick.org](https://roku.nanick.org) you'll be asked for the URL that your Roku can be reached at on your local network.  
 
+In my case, I had to set up a DNS CNAME record as well as a nginx proxy_pass in order to use a hostname, but you can also use an IP address. Your input is checked for a valid URL, so make sure you include the URI scheme (http) as well as the port number (8060), like this
+```
+http://10.0.0.10:8060
+```
+**Use Case**  
 ---
 If you've ever been faced with a non-qwerty on-screen keyboard and nothing but a remote equipped with arrows and an 'OK' button, then you know that it feels like it takes 15 minutes <i>each</i> time you type your email address to authenticate into a single streaming platform.  
   
 You can use this webpage to, for example, enable you to use your laptop keyboard to type your login credentials for the streaming platforms that you use. For me this made the process roughly 12 times faster.  
-
+**Key and Function map**  
 ---
-## Key and Function map  
-  
+
 <table id="table1">
     <tr>
         <td style="border-left: 2px solid blue; border-top-left-radius: 0.5em;" class="head">Key</td>
