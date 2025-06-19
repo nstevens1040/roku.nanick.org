@@ -9,9 +9,75 @@
                 overflow-y: hidden;
                 margin: 0px 0px 0px 0px;
                 height: 92vh;
-                width: 98vw;
+                width: 100vw;
                 font-family: Consolas, 'Courier New', monospace;
             }
+            main {
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                margin: auto;
+                padding: 0px;
+            }
+            .banner {
+                /* position: absolute;
+                top: 0;
+                left: 0; */
+                height:150px;
+                width: 100vw;
+                background-color: purple;
+                color: rgb(206, 206, 206);
+                font-size: 24px;
+            }
+            #device {
+                margin: auto;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                /* width: fit-content; */
+                text-align: center;
+                white-space: nowrap;
+                /*margin: 8.6vh auto 8.6vh auto;*/
+            }
+            .toptext {
+                margin: auto;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                /* width: fit-content; */
+                height: 100px;
+                min-height: 100px;
+                max-height: 100px;
+                text-align: center;
+                line-height: 100px;
+                white-space: nowrap;
+                /*margin: 8.6vh auto 8.6vh auto;*/
+            }
+            .deviceuri {
+                margin: auto;
+                /* margin: 110px auto 0px auto; */
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+            }
+            #rokuurl {
+                padding: 0px;
+                border: 2px solid blue;
+                border-radius: 0.5em;
+                width: 400px;
+                min-width: 400px;
+                max-width: 400px;
+                line-height: 22px;
+            }
+            #submiturl {
+                padding: 0px;
+                border-radius: 0.5em;
+                width: 70px;
+                min-width: 70px;
+                max-width: 70px;
+                line-height: 22px;
+            }
+
             .cntr {
                 width: 75%;
                 min-width: 75%;
@@ -19,36 +85,14 @@
                 height: 75%;
                 min-height: 75%;
                 max-height: 75%;
-                border: 2px solid blue;
+                border: 3px solid blue;
                 border-radius: 0.5em;
                 margin: 8.6vh auto 8.6vh auto;
             }
-            .banner {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100px;
-                width: 100%;
-                background-color: purple;
-                color: rgb(206, 206, 206);
-                font-size: 24px;
-            }
-            .toptext {
-                margin: auto;
-                width: 565px;
-                min-width: 565px;
-                max-width: 565px;
-                height: 75%;
-                min-height: 75%;
-                max-height: 75%;
 
 
-                text-align: center;
-                line-height: 100px;
-                white-space: nowrap;
-                /*margin: 8.6vh auto 8.6vh auto;*/
-            }
             .cntr {
+                display: none;
                 width: 565px;
                 min-width: 565px;
                 max-width: 75%;
@@ -59,7 +103,7 @@
                 border-radius: 0.5em;
                 margin: 10px auto 0px auto;
                 overflow-y: scroll;
-                display: flex;
+                /* display: flex; */
                 flex-direction: column-reverse;
             }
             .legend {
@@ -77,10 +121,11 @@
                 float: left;
             }
             #table1 {
+                display: none;
                 width: 570px;
                 min-width: 570px;
                 max-width: 570px;
-                margin: 110px auto 0px auto;
+                margin: 10px auto 0px auto;
             }
             td,th {
                 padding: 5px;
@@ -107,28 +152,21 @@
                 font-family: sans-serif;
                 font-size: 0.85em
             }
+            a {
+                font-size: 18px;
+            }
+            a:hover {
+                color: rgb(158, 158, 158);
+            }
         </style>
         <script type="application/javascript">
-            var baseuri = "https://rokustick4k.nanicklocal.hopto.org"
-            var keyMap = {
-                "ArrowUp"     : `${baseuri}/keypress/Up`,
-                "ArrowLeft"   : `${baseuri}/keypress/Left`,
-                "ArrowDown"   : `${baseuri}/keypress/Down`,
-                "ArrowRight"  : `${baseuri}/keypress/Right`,
-                "Enter"       : `${baseuri}/keypress/Select`,
-                "Back"        : `${baseuri}/keypress/Back`,
-                "Backspace"   : `${baseuri}/keypress/Backspace`,
-                "Home"        : `${baseuri}/keypress/Home`,
-                "Escape"      : `${baseuri}/keypress/Back`,
-                "PausePlay"   : `${baseuri}/keypress/Play`,
-                "VolumeUp"    : `${baseuri}/keypress/VolumeUp`,
-                "VolumeDown"  : `${baseuri}/keypress/VolumeDown`
-            };
+            var baseuri = "";
+            var keyMap = {};
             var integ = []; for(var i = 32; i < 127; i++){ integ.push(i); }
             var ascii = new Uint8Array(integ);
             var special = new Uint8Array([32,33,64,35,36,37,94,38,42,40,41,95,43]);
             var encoder = new TextEncoder();
-            window.addEventListener("keydown",(event)=>{
+            function keyStrokeReader(event){
                 var text = event.key;
                 var bytes = encoder.encode(text);
                 var uri = "";
@@ -198,7 +236,8 @@
                         });
                     });    
                 }
-            });
+            }
+            var device_info = "";
             document.addEventListener("DOMContentLoaded",()=>{
                 window.addEventListener("resize",()=>{
                     if(document.querySelector("#top > div").clientWidth < 529){
@@ -209,73 +248,157 @@
                         document.querySelector("#top > div").style.lineHeight = h;
                     }
                 });
+                if(document.location.search){
+                    var decoded_uri = "";
+                    [...document.location.search.substr(1).split('=')].forEach(i=>{
+                        [...i.split('&')].forEach(a=>{
+                            if(a.match(/^http/)){ decoded_uri = decodeURIComponent(a); }
+                        });
+                    });
+                    try {
+                        newurl = new URL(decoded_uri);
+                    } catch {
+                        console.log("invalid URL");
+                        return;
+                    }
+                    if(newurl.hostname.length > 0){
+                        baseuri = decoded_uri;
+                        
+                        fetch(baseuri).then((response)=>{
+                            var responseText = response.text();
+                            responseText.then((textxml)=>{
+                                var text = textxml;
+                                var xmlDoc = new DOMParser().parseFromString(text,"text/xml");
+                                var fname = xmlDoc.firstChild.children[1].getElementsByTagName("friendlyName")[0].innerHTML;
+                                var model = xmlDoc.firstChild.children[1].getElementsByTagName("modelName")[0].innerHTML;
+                                var manufacturer = xmlDoc.firstChild.children[1].getElementsByTagName("manufacturer")[0].innerHTML;
+                                device_info = "&#9989; " + `${manufacturer} ${fname} ${model}`;
+                                document.getElementById("device").innerHTML = device_info;
+                            });
+                        });
+                        document.getElementById("requesturl").innerHTML = "&#9989; " + baseuri;
+                        document.getElementById("urlform").style.display = "none";
+                        document.getElementById("table1").style.display = "block";
+                        document.getElementById("log").style.display = "flex";
+                        keyMap = {
+                            "ArrowUp"     : `${baseuri}/keypress/Up`,
+                            "ArrowLeft"   : `${baseuri}/keypress/Left`,
+                            "ArrowDown"   : `${baseuri}/keypress/Down`,
+                            "ArrowRight"  : `${baseuri}/keypress/Right`,
+                            "Enter"       : `${baseuri}/keypress/Select`,
+                            "Back"        : `${baseuri}/keypress/Back`,
+                            "Backspace"   : `${baseuri}/keypress/Backspace`,
+                            "Home"        : `${baseuri}/keypress/Home`,
+                            "Escape"      : `${baseuri}/keypress/Back`,
+                            "PausePlay"   : `${baseuri}/keypress/Play`,
+                            "VolumeUp"    : `${baseuri}/keypress/VolumeUp`,
+                            "VolumeDown"  : `${baseuri}/keypress/VolumeDown`
+                        };
+                        document.getElementById("geturl").style.display = "none";
+                        document.getElementById("listen").style.display = "block";
+                        window.addEventListener("keydown",keyStrokeReader);
+                        document.getElementById("pause").style.display = "inline";
+                    }
+                }
             });
+            function pause(x){
+                window.removeEventListener('keydown',keyStrokeReader);
+                x.style.display = 'none';
+                document.getElementById("resume").style.display = "inline";
+            }
+            function resume(x){
+                window.addEventListener('keydown',keyStrokeReader);
+                x.style.display = 'none';
+                document.getElementById("pause").style.display = "inline";
+            }
         </script>
     </head>
     <body>
         <div id="top" class="banner">
-            <div class="toptext">
+            <div id="listen" style="display: none;" class="toptext">
                 Listening for input to send to your Roku
             </div>
-        </div>
-        <table id="table1">
-            <tr>
-                <td style="border-left: 2px solid blue; border-top-left-radius: 0.5em;" class="head">Key</td>
-                <td style="border-top-right-radius: 0.5em;" class="head">Function</td>
-                <td style="border-top-left-radius: 0.5em; border-left: 2px solid blue;" class="head">Key</td>
-                <td class="head" style="border-top-right-radius: 0.5em;">Function</td>
-            </tr>
-            <tr>
-                <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&uarr;</kbd></td>
-                <td class="cell">Navigate up</td>
-                <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">Backspace</kbd></td>
-                <td class="cell">Backspace</td>
-            </tr>
-            <tr>
-                <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&larr;</kbd></td>
-                <td class="cell">Navigate left</td>
-                <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">H</kbd>
-                </td>
-                <td class="cell">Home</td>
-            </tr>
-            <tr>
-                <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&darr;</kbd></td>
-                <td class="cell">Navigate down</td>
-                <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Esc</kbd>
-                </td>
-                <td class="cell">Navigate back</td>
-            </tr>
-            <tr>
-                <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&rarr;</kbd></td>
-                <td class="cell">Navigate right</td>
-                <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Ctrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
-                </td>
-                <td class="cell">Pause / Play</td>
-            </tr>
-            <tr>
-                <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Enter</kbd>
-                </td>
-                <td class="cell">Select</td>
-                <td style="border-left: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&uarr;</kbd>
-                </td>
-                <td class="cell">Volume Up</td>
-            </tr>
-            <tr>
-                <td style="border-bottom-left-radius: 0.5em; border-left: 2px solid blue; border-bottom: 2px solid blue;" class="cell">
-                    <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&larr;</kbd>
-                </td>
-                <td style="border-bottom-right-radius: 0.5em; border-bottom: 2px solid blue;" class="cell">Navigate back</td>
-                <td style=" border-bottom: 2px solid blue; border-bottom-left-radius: 0.5em; border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&darr;</kbd></td>
-                <td style="border-bottom-right-radius: 0.5em; border-bottom: 2px solid blue;" class="cell">Volume Down</td>
-            </tr>
-        </table>
-        <div class="cntr" id="log">
+            <div style="width: 400px; margin: auto;">
+                <a style="display: none;" id="pause" title="Click here to pause key stroke reading" onclick="pause(this);">Click here to pause key stroke reading</a>
+            </div>
+            <div style="width: 400px; margin: auto;">
+                <a style="display: none;" id="resume" title="Click here to resume key stroke reading" onclick="resume(this);">Click here to resume key stroke reading</a>
+            </div>
             
+            <div id="geturl" class="toptext">
+                Enter your Roku's URL
+            </div>
         </div>
+        <div style="height: 20px;"></div>
+        <main>
+            <div class="deviceuri">
+                <form method="get" action="/" id="urlform">
+                    <label for="rokuurl">Roku URL:</label>
+                    <input type="text" id="rokuurl" name="rokuurl" title="Enter your Roku's URL here" placeholder="https://<my roku url>:8060/">
+                    <input type="submit" id="submiturl" name="submiturl">
+                </form>
+                <span id="requesturl"></span>
+                <span id="device"></span>
+            </div>
+            <table id="table1">
+                <tr>
+                    <td style="border-left: 2px solid blue; border-top-left-radius: 0.5em;" class="head">Key</td>
+                    <td style="border-top-right-radius: 0.5em;" class="head">Function</td>
+                    <td style="border-top-left-radius: 0.5em; border-left: 2px solid blue;" class="head">Key</td>
+                    <td class="head" style="border-top-right-radius: 0.5em;">Function</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&uarr;</kbd></td>
+                    <td class="cell">Navigate up</td>
+                    <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">Backspace</kbd></td>
+                    <td class="cell">Backspace</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&larr;</kbd></td>
+                    <td class="cell">Navigate left</td>
+                    <td style="border-left: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">H</kbd>
+                    </td>
+                    <td class="cell">Home</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&darr;</kbd></td>
+                    <td class="cell">Navigate down</td>
+                    <td style="border-left: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Esc</kbd>
+                    </td>
+                    <td class="cell">Navigate back</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&rarr;</kbd></td>
+                    <td class="cell">Navigate right</td>
+                    <td style="border-left: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Ctrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
+                    </td>
+                    <td class="cell">Pause / Play</td>
+                </tr>
+                <tr>
+                    <td style="border-left: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Enter</kbd>
+                    </td>
+                    <td class="cell">Select</td>
+                    <td style="border-left: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&uarr;</kbd>
+                    </td>
+                    <td class="cell">Volume Up</td>
+                </tr>
+                <tr>
+                    <td style="border-bottom-left-radius: 0.5em; border-left: 2px solid blue; border-bottom: 2px solid blue;" class="cell">
+                        <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&larr;</kbd>
+                    </td>
+                    <td style="border-bottom-right-radius: 0.5em; border-bottom: 2px solid blue;" class="cell">Navigate back</td>
+                    <td style=" border-bottom: 2px solid blue; border-bottom-left-radius: 0.5em; border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&darr;</kbd></td>
+                    <td style="border-bottom-right-radius: 0.5em; border-bottom: 2px solid blue;" class="cell">Volume Down</td>
+                </tr>
+            </table>
+            <div class="cntr" id="log">
+                
+            </div>
+        </main>
     </body>
 </html>
