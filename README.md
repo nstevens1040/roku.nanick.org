@@ -49,7 +49,7 @@ You can use this webpage to, for example, enable you to use your laptop keyboard
         <td style="border-left: 2px solid blue;" class="cell"><kbd class="keyboard-key nowrap">&rarr;</kbd></td>
         <td class="cell">Navigate right</td>
         <td style="border-left: 2px solid blue;" class="cell">
-            <kbd class="keyboard-key nowrap">Cntrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
+            <kbd class="keyboard-key nowrap">Ctrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
         </td>
         <td class="cell">Pause / Play</td>
     </tr>
