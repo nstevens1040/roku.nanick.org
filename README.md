@@ -1,5 +1,5 @@
 # [roku.nanick.org](https://roku.nanick.org)
-A webpage that sends keyboard input to your Roku which allows for easier typing and navigation within the Roku UI.
+A webpage that leverages Roku's External Control Protocol to send keyboard input to your Roku which allows for easier typing and faster navigation within the Roku UI.  
 
 ---
 My Roku's URL is hard coded in the JavaScript. If you want to use this, then you'll need to replace  
