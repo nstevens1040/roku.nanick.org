@@ -12,6 +12,8 @@ http://10.0.0.10:8060
 ```
 **Use Case**  
 ---
+The picture below basically sums up the entire use case.  
+![](https://raw.githubusercontent.com/nstevens1040/roku.nanick.org/refs/heads/main/.gitignore/nonqwerty.png)  
 If you've ever been faced with a non-qwerty on-screen keyboard and nothing but a remote equipped with arrows and an 'OK' button, then you know that it feels like it takes 15 minutes <i>each</i> time you type your email address to authenticate into a single streaming platform.  
   
 You can use this webpage to, for example, enable you to use your laptop keyboard to type your login credentials for the streaming platforms that you use. For me this made the process roughly 12 times faster.  
