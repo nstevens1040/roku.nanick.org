@@ -203,6 +203,15 @@
                                 uri = keyMap["VolumeDown"];
                                 ihtml = "VolumeDown<br/>";
                                 break;
+                            case "r":
+                                event.preventDefault();
+                                uri = keyMap["Rev"];
+                                ihtml = "Rev<br/>";
+                                break;
+                            case "f":
+                                event.preventDefault();
+                                uri = keyMap["Fwd"];
+                                ihtml = "Fwd<br/>";
                             default:
                                 break;
                         }
@@ -292,7 +301,10 @@
                             "Escape"      : `${baseuri}/keypress/Back`,
                             "PausePlay"   : `${baseuri}/keypress/Play`,
                             "VolumeUp"    : `${baseuri}/keypress/VolumeUp`,
-                            "VolumeDown"  : `${baseuri}/keypress/VolumeDown`
+                            "VolumeDown"  : `${baseuri}/keypress/VolumeDown`,
+                            "Rev"         : `${baseuri}/keypress/Rev`,
+                            "Fwd"         : `${baseuri}/keypress/Fwd`
+
                         };
                         document.getElementById("geturl").style.display = "none";
                         document.getElementById("listen").style.display = "block";
