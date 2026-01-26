@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <title>Roku Control</title>
+        <style type="text/css">
+            body {
+                overflow-y: hidden;
+                margin: 0px 0px 0px 0px;
+                height: 92vh;
+                width: 100vw;
+                font-family: Consolas, 'Courier New', monospace;
+            }
+            main {
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                margin: auto;
+                padding: 0px;
+            }
+            .banner {
+                height:100px;
+                width: 100vw;
+                background-color: purple;
+                color: rgb(206, 206, 206);
+                font-size: 24px;
+            }
+            #device {
+                margin: auto;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                text-align: center;
+                white-space: nowrap;
+            }
+            .toptext {
+                margin: auto;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                height: 50px;
+                min-height: 50px;
+                max-height: 50px;
+                text-align: center;
+                line-height: 50px;
+                white-space: nowrap;
+            }
+            .deviceuri {
+                margin: auto;
+                width: 100%;
+                min-width: 100%;
+                max-width: 100%;
+            }
+            #rokuurl {
+                padding: 0px;
+                border: 2px solid blue;
+                border-radius: 0.5em;
+                width: 400px;
+                min-width: 400px;
+                max-width: 400px;
+                line-height: 22px;
+            }
+            #submiturl {
+                padding: 0px;
+                border-radius: 0.5em;
+                width: 70px;
+                min-width: 70px;
+                max-width: 70px;
+                line-height: 22px;
+            }
+            .cntrparent {
+                display: none;
+                width: 565px;
+                min-width: 565px;
+                max-width: 565px;
+                height:  300px;
+                min-height: 300px;
+                max-height: 300px;
+                overflow: hidden;
+                border: 2px solid blue;
+                border-radius: 0.5em;
+                margin: 10px auto 0px auto;
+            }
+            .cntr {
+                display: none;
+                width: 565px;
+                min-width: 565px;
+                max-width: 565px;
+                height:  300px;
+                min-height: 300px;
+                max-height: 300px;
+                overflow-y: auto;
+                padding-right: 17px;
+                box-sizing: content-box;
+                flex-direction: column;
+            }
+            .legend {
+                width: 560px;
+                min-width: 560px;
+                max-width: 560px;
+                height: 200px;
+                min-height: 200px;
+                max-height: 200px;
+                border: 2px solid blue;
+                border-radius: 0.5em;
+                margin: 110px auto 0px auto;
+            }
+            th {
+                float: left;
+            }
+            #table1 {
+                display: none;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                margin: 10px auto 0px auto;
+            }
+            td,th {
+                padding: 5px;
+                white-space: nowrap;
+                width: 130.4px;
+                max-width: 130.4px;
+                min-width: 130.4px;
+            }
+            .head {
+                border-right: 2px solid blue;
+                border-top: 2px solid blue;
+                font-weight: bold;
+            }
+            .cell {
+                border-right: 2px solid blue;
+                border-top: 2px solid blue;
+            }
+            .keyboard-key {
+                border: 1px solid #aaa;
+                border-radius: 0.2em;
+                box-shadow: 0.1em 0.1em 0.2em rgba(0,0,0,0.1);
+                background-color: #f8f9fa;
+                background-image: linear-gradient(to bottom,#eaecf0,#f8f9fa,#eaecf0);
+                color: #202122;
+                padding: 0.1em 0.3em;
+                font-family: sans-serif;
+                font-size: 0.85em
+            }
+            a {
+                font-size: 18px;
+            }
+            a:hover {
+                color: rgb(158, 158, 158);
+            }
+            .filetable {
+                display: none;
+                width: 570px;
+                min-width: 570px;
+                max-width: 570px;
+                margin: 10px auto 0px auto;
+                border-left: 2px solid blue;
+                border-right: 2px solid blue;
+                border-collapse: inherit;
+                border-spacing: 0;
+                border-top-left-radius: 0.5em;
+                border-top-right-radius: 0.5em;
+                border-bottom-right-radius: 0.5em;
+                border-bottom-left-radius: 0.5em;
+            }
+
+            .topleft {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-top: 2px solid blue;
+                border-left: none;
+                border-top-left-radius: 0.5em;
+            }
+            .midtopleft {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-top: 2px solid blue;
+                border-top-left-radius: 0.5em;
+                border-spacing: 0px;
+                border-collapse: inherit;
+            }
+            
+            .topmid {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+            }
+            .midbottomright {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-bottom-right-radius: 0.5em;
+            }
+            .midbottomleft {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-bottom-left-radius: 0.5em;
+            }
+            .midleft {
+                border-bottom: 2px solid blue;
+                border-right: 2px solid blue;
+            }
+            .midtopright {
+                border-bottom:  2px solid blue;
+                border-top: 2px solid blue;
+                border-right: 2px solid blue;
+                border-top-right-radius: 0.5em;
+            }
+            .topright {
+                border-bottom:  2px solid blue;
+                border-top: 2px solid blue;
+                border-right: none;
+                border-top-right-radius: 0.5em;
+                border-left: none;
+                border-spacing: 0px;
+                border-collapse: inherit;
+            }
+
+            .toprightshort {
+                border-bottom:  2px solid blue;
+                border-top: none;
+                border-left: none;
+            }
+
+            .midleft {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-left: none;
+                border-top: none;
+            }
+
+            .midleftlight {
+                border-bottom:  2px solid blue;
+                border-right:  2px solid blue;
+                border-left: none;
+                border-top: none;
+            }
+
+            .midright {
+                border-bottom: 2px solid blue;
+                border-collapse: inherit;
+                border-spacing: 0px;
+                border-top: none;
+            }
+            .midmidright {
+                border-bottom: 2px solid blue;
+                border-right: 2px solid blue;
+                border-top: none;
+            }
+            .midrightshort {
+                border-bottom: 1px solid rgb(36, 36, 36);
+                border-right: none;
+                border-left: none;
+                border-top: none;
+            }
+
+            .bottomleft {
+                border-bottom: 2px solid blue;
+                border-right:  2px solid blue;
+                border-left: none;
+                border-top: none;
+                border-bottom-left-radius: 0.5em;
+            }
+
+            .bottomleftlight {
+                border-bottom: none;
+                border-right:  2px solid blue;
+                border-left: none;
+                border-top: none;
+            }
+
+            .bottomright {
+                border-bottom: 2px solid blue;
+                border-bottom-right-radius: 0.5em;
+                border-right: none;
+                border-top: none;
+                border-left: none;
+            }
+
+            .bottomrightshort {
+                border-bottom: none;
+                border-right: none;
+                border-top: none;
+                border-left: none;
+            }
+        </style>
+        <script type="application/javascript">
+            var baseuri = "";
+            var keyMap = {};
+            var integ = []; for(var i = 32; i < 127; i++){ integ.push(i); }
+            var ascii = new Uint8Array(integ);
+            var special = new Uint8Array([32,33,64,35,36,37,94,38,42,40,41,95,43]);
+            var encoder = new TextEncoder();
+            function keyStrokeReader(event){
+                var text = event.key;
+                var bytes = encoder.encode(text);
+                var uri = "";
+                var ihtml = "";
+                if(bytes.length == 1 && !event.altKey){
+                    if(ascii.indexOf(bytes[0]) > -1){
+                        event.preventDefault();
+                        ihtml = text;
+                        if(special.indexOf(bytes[0]) > -1){
+                            text = encodeURIComponent(text);
+                        }
+                        uri = `${baseuri}/keypress/Lit_${text}`
+                    }
+                } else {
+                    if(event.altKey){
+                        switch(text){
+                            case "ArrowLeft":
+                                event.preventDefault();
+                                uri = keyMap["Back"];
+                                ihtml = "Back<br/>";
+                                break;
+                            case "h":
+                                event.preventDefault();
+                                uri = keyMap["Home"];
+                                ihtml = "Home<br/>";
+                                break;
+                            case "ArrowUp":
+                                event.preventDefault();
+                                uri = keyMap["VolumeUp"];
+                                ihtml = "VolumeUp<br/>";
+                                break;
+                            case "ArrowDown":
+                                event.preventDefault();
+                                uri = keyMap["VolumeDown"];
+                                ihtml = "VolumeDown<br/>";
+                                break;
+                            case "r":
+                                event.preventDefault();
+                                uri = keyMap["Rev"];
+                                ihtml = "Rev<br/>";
+                                break;
+                            case "f":
+                                event.preventDefault();
+                                uri = keyMap["Fwd"];
+                                ihtml = "Fwd<br/>";
+                            default:
+                                break;
+                        }
+                    } else {
+                        if(event.ctrlKey){
+                            switch(text){
+                                case " ":
+                                    event.preventDefault();
+                                    uri = keyMap["PausePlay"];
+                                    ihtml = "PausePlay<br/>";
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        if(keyMap[text]){
+                            event.preventDefault();
+                            uri = keyMap[text];
+                            ihtml = text + "<br/>";
+                        }
+                    }
+                }
+                if(uri.length > 1){
+                    var msg = document.createElement("div");
+                    msg.innerHTML = ihtml;
+                    document.getElementById("log").prepend(msg);
+                    console.log(event.key);
+                    fetch(uri,{ method: 'post', mode: 'no-cors' }).then((res) => {
+                        res.text().then((r) => {
+                            if(r){
+                                console.log(r);
+                            }
+                        });
+                    });    
+                }
+            }
+            var device_info = "";
+            document.addEventListener("DOMContentLoaded",()=>{
+                window.addEventListener("resize",()=>{
+                    if(document.querySelector("#top > div").clientWidth < 529){
+                        document.querySelector("#top > div").style.fontSize = (document.querySelector("#top > div").clientWidth * 0.0449609168514052).toString() + "px";
+                        var h = ((document.querySelector("#top > div").clientWidth * 0.0449609168514052) * 4.16666666666667).toString() + "px";
+                        document.getElementById("top").style.height = h;
+                        document.getElementById("top").style.lineHeight = h;
+                        document.querySelector("#top > div").style.lineHeight = h;
+                    }
+                });
+                if(document.location.search){
+                    var decoded_uri = "";
+                    [...document.location.search.substr(1).split('=')].forEach(i=>{
+                        [...i.split('&')].forEach(a=>{
+                            if(a.match(/^http/)){ decoded_uri = decodeURIComponent(a); }
+                        });
+                    });
+                    try {
+                        newurl = new URL(decoded_uri);
+                    } catch {
+                        console.log("invalid URL");
+                        return;
+                    }
+                    if(newurl.hostname.length > 0){
+                        baseuri = decoded_uri;
+                        fetch(`${baseuri}`).then((response)=>{
+                            var responseText = response.text();
+                            responseText.then((textxml)=>{
+                                var text = textxml;
+                                var xmlDoc = new DOMParser().parseFromString(text,"text/xml");
+                                var fname = xmlDoc.firstChild.children[1].getElementsByTagName("friendlyName")[0].innerHTML;
+                                var model = xmlDoc.firstChild.children[1].getElementsByTagName("modelName")[0].innerHTML;
+                                var manufacturer = xmlDoc.firstChild.children[1].getElementsByTagName("manufacturer")[0].innerHTML;
+                                device_info = "&#9989; " + `${manufacturer} ${fname} ${model}`;
+                                document.getElementById("device").innerHTML = device_info;
+                            });
+                        });
+                        document.getElementById("requesturl").innerHTML = "&#9989; " + baseuri;
+                        document.getElementById("urlform").style.display = "none";
+                        document.getElementById("table1").style.display = "block";
+                        document.getElementById("log").style.display = "flex";
+                        document.getElementById("logparent").style.display = "block";
+                        keyMap = {
+                            "ArrowUp"     : `${baseuri}/keypress/Up`,
+                            "ArrowLeft"   : `${baseuri}/keypress/Left`,
+                            "ArrowDown"   : `${baseuri}/keypress/Down`,
+                            "ArrowRight"  : `${baseuri}/keypress/Right`,
+                            "Enter"       : `${baseuri}/keypress/Select`,
+                            "Back"        : `${baseuri}/keypress/Back`,
+                            "Backspace"   : `${baseuri}/keypress/Backspace`,
+                            "Home"        : `${baseuri}/keypress/Home`,
+                            "Escape"      : `${baseuri}/keypress/Back`,
+                            "PausePlay"   : `${baseuri}/keypress/Play`,
+                            "VolumeUp"    : `${baseuri}/keypress/VolumeUp`,
+                            "VolumeDown"  : `${baseuri}/keypress/VolumeDown`,
+                            "Rev"         : `${baseuri}/keypress/Rev`,
+                            "Fwd"         : `${baseuri}/keypress/Fwd`
+
+                        };
+                        document.getElementById("geturl").style.display = "none";
+                        document.getElementById("listen").style.display = "block";
+                        window.addEventListener("keydown",keyStrokeReader);
+                        document.getElementById("pause").style.display = "inline";
+                    }
+                }
+            });
+            function pause(x){
+                window.removeEventListener('keydown',keyStrokeReader);
+                x.style.display = 'none';
+                document.getElementById("resume").style.display = "inline";
+            }
+            function resume(x){
+                window.addEventListener('keydown',keyStrokeReader);
+                x.style.display = 'none';
+                document.getElementById("pause").style.display = "inline";
+            }
+        </script>
+    </head>
+    <body>
+        <div id="top" class="banner">
+            <div id="listen" style="display: none;" class="toptext">
+                Listening for input to send to your Roku
+            </div>
+            <div style="width: 400px; margin: auto;">
+                <a style="display: none;" id="pause" title="Click here to pause key stroke reading" onclick="pause(this);">Click here to pause key stroke reading</a>
+            </div>
+            <div style="width: 400px; margin: auto;">
+                <a style="display: none;" id="resume" title="Click here to resume key stroke reading" onclick="resume(this);">Click here to resume key stroke reading</a>
+            </div>
+            
+            <div id="geturl" class="toptext">
+                Enter your Roku's URL
+            </div>
+        </div>
+        <div style="height: 20px;"></div>
+        <main>
+            <div class="deviceuri">
+                <form method="get" action="/" id="urlform">
+                    <label for="rokuurl">Roku URL:</label>
+                    <input type="text" id="rokuurl" name="rokuurl" title="Enter your Roku's URL here" placeholder="https://<my roku url>:8060/">
+                    <input type="submit" id="submiturl" name="submiturl">
+                </form>
+                <span id="requesturl"></span>
+                <span id="device"></span>
+            </div>
+            <table id="table1" class="filetable">
+                <tr>
+                    <td class="topleft" style="font-weight: bold;">Key</td>
+                    <td class="midtopright" style="font-weight: bold;">Function</td>
+                    <td class="midtopleft" style="font-weight: bold;">Key</td>
+                    <td class="topright" style="font-weight: bold;">Function</td>
+                </tr>
+                <tr>
+                    <td class="midleft"><kbd class="keyboard-key nowrap">&uarr;</kbd></td>
+                    <td class="midmidright">Navigate up</td>
+                    <td class="midleft"><kbd class="keyboard-key nowrap">Backspace</kbd></td>
+                    <td class="midright">Backspace</td>
+                </tr>
+                <tr>
+                    <td class="midleft"><kbd class="keyboard-key nowrap">&larr;</kbd></td>
+                    <td class="midmidright">Navigate left</td>
+                    <td class="midleft">
+                        <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">H</kbd>
+                    </td>
+                    <td class="midright">Home</td>
+                </tr>
+                <tr>
+                    <td class="midleft"><kbd class="keyboard-key nowrap">&darr;</kbd></td>
+                    <td class="midmidright">Navigate down</td>
+                    <td class="midleft">
+                        <kbd class="keyboard-key nowrap">Esc</kbd>
+                    </td>
+                    <td class="midright">Navigate back</td>
+                </tr>
+                <tr>
+                    <td class="midleft"><kbd class="keyboard-key nowrap">&rarr;</kbd></td>
+                    <td class="midmidright">Navigate right</td>
+                    <td class="midleft">
+                        <kbd class="keyboard-key nowrap">Ctrl</kbd> + <kbd class="keyboard-key nowrap">Space</kbd>
+                    </td>
+                    <td class="midright">Pause / Play</td>
+                </tr>
+                <tr>
+                    <td class="midleft">
+                        <kbd class="keyboard-key nowrap">Enter</kbd>
+                    </td>
+                    <td class="midmidright">Select</td>
+                    <td class="midleft">
+                        <kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&uarr;</kbd>
+                    </td>
+                    <td class="midright">Volume Up</td>
+                </tr>
+                <tr>
+                    <td class="bottomleft"><kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&larr;</kbd></td>
+                    <td class="midbottomright">Navigate back</td>
+                    <td class="midbottomleft"><kbd class="keyboard-key nowrap">Alt</kbd> + <kbd class="keyboard-key nowrap">&darr;</kbd></td>
+                    <td class="bottomright">Volume Down</td>
+                </tr>
+            </table>
+            <div class="cntrparent" id="logparent">
+                <div class="cntr" id="log">
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
